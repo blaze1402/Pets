@@ -58,11 +58,34 @@ public class CatalogActivity extends AppCompatActivity {
         // Perform this raw SQL query "SELECT * FROM pets"
         // to get a Cursor that contains all rows from the pets table.
         Cursor cursor = db.rawQuery("SELECT * FROM " + PetEntry.TABLE_NAME, null);
+        TextView displayView = findViewById(R.id.text_view_pet);
+
         try {
-            // Display the number of rows in the Cursor (which reflects the number of rows in the
-            // pets table in the database).
-            TextView displayView = findViewById(R.id.text_view_pet);
-            displayView.setText("Number of rows in pets database table: " + cursor.getCount());
+            // Create a header in the Text View that looks like this:
+            //
+            // The pets table contains <number of rows in Cursor> pets.
+            // _id - name - breed - gender - weight
+            //
+            // In the while loop below, iterate through the rows of the cursor and display
+            // the information from each column in this order.
+            displayView.setText("The pets table contains " + cursor.getCount() + " pets.\n\n");
+            displayView.append(PetEntry._ID + " - \t" +
+                    PetEntry.COLUMN_PET_NAME + " - \t" +
+                    PetEntry.COLUMN_PET_BREED + " - \t" +
+                    PetEntry.COLUMN_PET_GENDER + " - \t" +
+                    PetEntry.COLUMN_PET_WEIGHT + "\n");
+
+            // Iterate through all the returned rows in the cursor
+            while (cursor.moveToNext()) {
+                // Display the values from each column of the current row in the cursor in the TextView
+                displayView.append("\n" +
+                        cursor.getString(cursor.getColumnIndex(PetEntry._ID)) + "\t " +
+                        cursor.getString(cursor.getColumnIndex(PetEntry.COLUMN_PET_NAME)) + "\t " +
+                        cursor.getString(cursor.getColumnIndex(PetEntry.COLUMN_PET_BREED)) + "\t " +
+                        cursor.getString(cursor.getColumnIndex(PetEntry.COLUMN_PET_GENDER)) + "\t " +
+                        cursor.getString(cursor.getColumnIndex(PetEntry.COLUMN_PET_WEIGHT))
+                );
+            }
         } finally {
             // Always close the cursor when you're done reading from it. This releases all its
             // resources and makes it invalid.
