@@ -7,14 +7,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
-import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.blaze.pets.data.PetContract.PetEntry;
 import com.blaze.pets.data.PetDbHelper;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 /**
  * Displays list of pets that were entered and stored in the app.
@@ -29,18 +28,21 @@ public class CatalogActivity extends AppCompatActivity {
         setContentView(R.layout.activity_catalog);
 
         // Setup FAB to open EditorActivity
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
-                startActivity(intent);
-            }
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(view -> {
+            Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
+            startActivity(intent);
         });
 
         // To access our database, we instantiate our subclass of SQLiteOpenHelper
         // and pass the context, which is the current activity.
         mDbHelper = new PetDbHelper(this);
+        displayDatabaseInfo();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         displayDatabaseInfo();
     }
 
@@ -59,7 +61,7 @@ public class CatalogActivity extends AppCompatActivity {
         try {
             // Display the number of rows in the Cursor (which reflects the number of rows in the
             // pets table in the database).
-            TextView displayView = (TextView) findViewById(R.id.text_view_pet);
+            TextView displayView = findViewById(R.id.text_view_pet);
             displayView.setText("Number of rows in pets database table: " + cursor.getCount());
         } finally {
             // Always close the cursor when you're done reading from it. This releases all its
@@ -94,14 +96,14 @@ public class CatalogActivity extends AppCompatActivity {
     }
 
     private void insertPet() {
-        SQLiteDatabase db=mDbHelper.getWritableDatabase();
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
-        ContentValues values=new ContentValues();
+        ContentValues values = new ContentValues();
 
-        values.put(PetEntry.COLUMN_PET_NAME,"Toto");
-        values.put(PetEntry.COLUMN_PET_BREED,"Terrier");
-        values.put(PetEntry.COLUMN_PET_GENDER,PetEntry.GENDER_MALE);
-        values.put(PetEntry.COLUMN_PET_WEIGHT,7);
+        values.put(PetEntry.COLUMN_PET_NAME, "Toto");
+        values.put(PetEntry.COLUMN_PET_BREED, "Terrier");
+        values.put(PetEntry.COLUMN_PET_GENDER, PetEntry.GENDER_MALE);
+        values.put(PetEntry.COLUMN_PET_WEIGHT, 7);
 
         long newRowID = db.insert(PetEntry.TABLE_NAME, null, values);
 
