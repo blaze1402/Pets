@@ -29,7 +29,7 @@
         </activity>
         <provider
             android:name=".data.PetProvider"
-            android:authorities="com.example.android.pets"
+            android:authorities="com.blaze.pets"
             android:exported="false" />
     </application>
 
