@@ -7,7 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -43,6 +43,8 @@ public class CatalogActivity extends AppCompatActivity {
      * the pets database.
      */
     private void displayDatabaseInfo() {
+
+
         // Define a projection that specifies which columns from the database
         // you will actually use after this query.
         String[] projection = {
@@ -61,39 +63,14 @@ public class CatalogActivity extends AppCompatActivity {
                 null,                   // Selection criteria
                 null);                  // The sort order for the returned rows
 
-        TextView displayView = findViewById(R.id.text_view_pet);
+        // Find the ListView which will be populated with the pet data
+        ListView petListView = (ListView) findViewById(R.id.list_view_pet);
 
-        try {
-            // Create a header in the Text View that looks like this:
-            //
-            // The pets table contains <number of rows in Cursor> pets.
-            // _id - name - breed - gender - weight
-            //
-            // In the while loop below, iterate through the rows of the cursor and display
-            // the information from each column in this order.
-            displayView.setText("The pets table contains " + cursor.getCount() + " pets.\n\n");
-            displayView.append(PetEntry._ID + " - \t" +
-                    PetEntry.COLUMN_PET_NAME + " - \t" +
-                    PetEntry.COLUMN_PET_BREED + " - \t" +
-                    PetEntry.COLUMN_PET_GENDER + " - \t" +
-                    PetEntry.COLUMN_PET_WEIGHT + "\n");
+        // Setup an Adapter to create a list item for each row of pet data in the Cursor.
+        PetCursorAdapter adapter = new PetCursorAdapter(this, cursor);
 
-            // Iterate through all the returned rows in the cursor
-            while (cursor.moveToNext()) {
-                // Display the values from each column of the current row in the cursor in the TextView
-                displayView.append("\n" +
-                        cursor.getString(cursor.getColumnIndex(PetEntry._ID)) + "\t " +
-                        cursor.getString(cursor.getColumnIndex(PetEntry.COLUMN_PET_NAME)) + "\t " +
-                        cursor.getString(cursor.getColumnIndex(PetEntry.COLUMN_PET_BREED)) + "\t " +
-                        cursor.getString(cursor.getColumnIndex(PetEntry.COLUMN_PET_GENDER)) + "\t " +
-                        cursor.getString(cursor.getColumnIndex(PetEntry.COLUMN_PET_WEIGHT))
-                );
-            }
-        } finally {
-            // Always close the cursor when you're done reading from it. This releases all its
-            // resources and makes it invalid.
-            cursor.close();
-        }
+        // Attach the adapter to the ListView.
+        petListView.setAdapter(adapter);
     }
 
     @Override
