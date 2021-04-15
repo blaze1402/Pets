@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,6 +31,13 @@ public class CatalogActivity extends AppCompatActivity {
             Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
             startActivity(intent);
         });
+
+        // Find the ListView which will be populated with the pet data
+        ListView petListView =findViewById(R.id.list_view_pet);
+
+        // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
+        View emptyView = findViewById(R.id.empty_view);
+        petListView.setEmptyView(emptyView);
     }
 
     @Override
